@@ -1,7 +1,8 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-    entry: "/src/index.js",
+    entry: "./src/index.jsx",
     output:{
         path: __dirname + "dist",
         filename: "dist/bundle.js",
@@ -20,5 +21,7 @@ module.exports = {
             }
         ]
     },
-
+    plugins:[
+        new webpack.HotModuleReplacementPlugin()
+    ]
 }
