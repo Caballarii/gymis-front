@@ -1,10 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
+var babelpolyfill = require("babel-polyfill");
 
 module.exports = {
     entry: "./src/index.jsx",
     output:{
-        path: __dirname + "dist",
+        path: __dirname + "/dist",
         filename: "dist/bundle.js",
     },
     module:{
@@ -21,7 +22,19 @@ module.exports = {
             }
         ]
     },
+    resolve: {extensions:['.js','.jsx']},
     plugins:[
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+
+    devServer: {
+        port: 3000, //监听的Server端口
+        historyApiFallback: true,
+        proxy: {
+            '/api/v1/*': {
+                target: 'http://localhost:9977',
+                secure: false
+            }
+        }
+    }
 }
