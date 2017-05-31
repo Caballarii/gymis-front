@@ -5,8 +5,8 @@ var babelpolyfill = require("babel-polyfill");
 module.exports = {
     entry: "./src/index.jsx",
     output:{
-        path: __dirname + "/dist",
-        filename: "dist/bundle.js",
+        path: __dirname + "/",
+        filename: "./dist/bundle.js",
     },
     module:{
         rules:[
