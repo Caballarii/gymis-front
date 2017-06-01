@@ -38,10 +38,12 @@ export default class ListTeacher extends React.Component{
     fetchData=async ()=>{
         let pageSize=10;
         
-        let url='teacher?pageNum='+this.state.pageNum+'&pageSize='+pageSize;
+        let url='/teacher?pageNum='+this.state.pageNum+'&pageSize='+pageSize;
         if(this.state.teacherName){
             url+='&teacherName='+this.state.teacherName;
         }
+        console.log(url);
+
 
         let data=await FetchUtil(url);
         this.setState({

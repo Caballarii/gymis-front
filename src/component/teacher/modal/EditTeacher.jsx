@@ -30,7 +30,7 @@ class EditTeacher extends React.Component{
             if (err) {
                 return;
             }
-            let data=await FetchUtil('teacher','PUT',Object.assign({},values,{id:this.props.record.id}));
+            let data=await FetchUtil('/teacher','PUT',Object.assign({},values,{id:this.props.record.id}));
             if(data.success){
                 Modal.success({
                     title:'修改成功！'

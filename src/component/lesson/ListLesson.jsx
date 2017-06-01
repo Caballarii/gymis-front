@@ -60,7 +60,7 @@ export default class ListLesson extends React.Component{
     fetchData=async ()=>{
         let pageSize=10;
         
-        let url='lesson?pageNum='+this.state.pageNum+'&pageSize='+pageSize;
+        let url='/lesson?pageNum='+this.state.pageNum+'&pageSize='+pageSize;
         if(this.state.lessonName){
             url+='&lessonName='+this.state.lessonName;
         }
@@ -76,7 +76,8 @@ export default class ListLesson extends React.Component{
     componentWillMount=async ()=>{
         this.fetchData();
 
-        let teacherData=await FetchUtil('teacher/list');
+        let teacherData=await FetchUtil('/teacher/list');
+        console.log(teacherData);
         this.setState({
             listTeacher:teacherData.data.list
         })

@@ -33,7 +33,8 @@ module.exports = {
         proxy: {
             '/api/v1/*': {
                 target: 'http://localhost:9977',
-                secure: false
+                secure: true,
+                changeOrigin: true
             }
         }
     }

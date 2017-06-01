@@ -36,7 +36,7 @@ class EditLesson extends React.Component{
             values.beginTime=moment(values.beginDate).hours(values.beginH).minutes(values.beginM).seconds("00");
             values.endTime=moment(values.beginTime).add('minutes',values.period);
             values.id=this.props.record.id;
-            let data=await FetchUtil('lesson','PUT',values);
+            let data=await FetchUtil('/lesson','PUT',values);
             if(data.success){
                 Modal.success({
                     title:'修改成功！'

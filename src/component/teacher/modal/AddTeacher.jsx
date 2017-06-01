@@ -30,7 +30,7 @@ class AddTeacher extends React.Component{
             if (err) {
                 return;
             }
-            let data=await FetchUtil('teacher','POST',values);
+            let data=await FetchUtil('/teacher','POST',values);
             if(data.success){
                 Modal.success({
                     title:'新增成功！'

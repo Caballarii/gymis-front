@@ -11,7 +11,7 @@ export var FetchUtil=async (url,method='get',param={})=>{
       // 请求方法同上
       method: method, // default
       // 基础url前缀
-      baseURL: '/api/v1/',
+      baseURL: '/api/v1',
     　　
     　　　　
       // transformRequest: [function (data) {
@@ -57,8 +57,9 @@ export var FetchUtil=async (url,method='get',param={})=>{
         requestHeader:{'Content-Type':'application/json; charset=utf-8'},
         responseType: 'json'
     }
+    
   }
-  let result=await axios.request(config)
+  let result=await axios.request(config);
   return result.data;
 }
 
