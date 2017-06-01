@@ -42,8 +42,6 @@ export default class ListTeacher extends React.Component{
         if(this.state.teacherName){
             url+='&teacherName='+this.state.teacherName;
         }
-        console.log(url);
-
 
         let data=await FetchUtil(url);
         this.setState({

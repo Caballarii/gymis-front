@@ -34,42 +34,57 @@ const Login=()=>{
     );
 }
 
-const RouterList = () =>(
-    <Router>
-        <Layout className="layout">
-    <Header>
-      <div className="logo" />
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={['2']}
-        style={{ lineHeight: '64px' }}
-      >
-        <Menu.Item key="lesson">课程管理</Menu.Item>
-        <Menu.Item key="teacher">教师管理</Menu.Item>
-      </Menu>
-    </Header>
-    <Content style={{ padding: '0 50px' }}>
-      <Breadcrumb style={{ margin: '12px 0' }}>
-        {/*<Breadcrumb.Item>Home</Breadcrumb.Item>
-        <Breadcrumb.Item>Lesson</Breadcrumb.Item>*/}
-      </Breadcrumb>
-      <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-          <Switch>
-            <Route exact path="/" component={Home}/>
-            <Route path="/login" component={Login}/>
-            <Route path="/teacher" component={ListTeacher}/>
-            <Route path="/lesson" component={ListLesson}/>
-            <Route component={Welcome}/>
-          </Switch>
-      </div>
-    </Content>
-    <Footer style={{ textAlign: 'center' }}>
-      教务系统
-    </Footer>
-  </Layout>
-            
-    </Router>
-)
+class RouterList extends React.Component{
+    
+    state={
+        currentKey:''
+    }
+
+    onSelect=(option)=>{
+        this.setState({
+            currentKey:option.key
+        });
+    }
+
+    render(){
+        return (
+            <Router>
+                <Layout className="layout">
+            <Header>
+            <div className="logo" />
+            <Menu
+                theme="light"
+                mode="horizontal"
+                selectedKeys={[this.state.currentKey]}
+                style={{ lineHeight: '64px' }}
+                onSelect={this.onSelect}
+            >
+                <Menu.Item key="lesson"><Link to="/lesson">课程管理</Link></Menu.Item>
+                <Menu.Item key="teacher"><Link to="/teacher">教师管理</Link></Menu.Item>
+            </Menu>
+            </Header>
+            <Content style={{ padding: '0 50px' }}>
+            <Breadcrumb style={{ margin: '12px 0' }}>
+                {/*<Breadcrumb.Item>Home</Breadcrumb.Item>
+                <Breadcrumb.Item>Lesson</Breadcrumb.Item>*/}
+            </Breadcrumb>
+            <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+                <Switch>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/login" component={Login}/>
+                    <Route path="/teacher" component={ListTeacher}/>
+                    <Route path="/lesson" component={ListLesson}/>
+                    <Route component={Welcome}/>
+                </Switch>
+            </div>
+            </Content>
+            <Footer style={{ textAlign: 'center' }}>
+            教务系统
+            </Footer>
+        </Layout>
+                    
+            </Router>
+        )}
+}
 
 export default RouterList;
