@@ -1,6 +1,7 @@
 import React from 'react';
-import {Table,Pagination,Row,Col,Input,Button,Form} from 'antd';
+import {Table,Pagination,Row,Col,Input,Button,Form,Select} from 'antd';
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 import {FetchUtil} from '../utils/FetchUtils';
 
@@ -18,6 +19,7 @@ export default class ListLesson extends React.Component{
         totalCount:0,
 
         lessonName:'',
+        teacherId:'',
 
         listTeacher:[]
     }
@@ -64,6 +66,9 @@ export default class ListLesson extends React.Component{
         if(this.state.lessonName){
             url+='&lessonName='+this.state.lessonName;
         }
+        if(this.state.teacherId){
+            url+='&teacherId='+this.state.teacherId;
+        }
 
         let data=await FetchUtil(url);
         this.setState({
@@ -99,6 +104,12 @@ export default class ListLesson extends React.Component{
         this.setState(state);
     }
 
+    handleSelect=(name,value)=>{
+        var state = this.state;
+        state[name]=value;
+        this.setState(state);
+    }
+
     handleSearch=()=>{
         this.fetchData();
     }
@@ -119,12 +130,21 @@ export default class ListLesson extends React.Component{
             <div>
                 <div>
                     <Row gutter={40}>
-                        <Col span={8}>
+                        <Col span={6}>
                             <FormItem {...formItemLayout} label={'课程名'}>
                                 <Input name="lessonName" value={this.state.lessonName} onChange={this.handleChange}/>
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={6}>
+                            <FormItem {...formItemLayout} label={'老师名'}>
+                                <Select value={this.state.teacherId} onChange={this.handleSelect.bind(this,'teacherId')}>
+                                    <Option value="">请选择老师</Option>
+                                    {this.state.listTeacher.map((info,index)=>{
+                                    })}
+                                </Select>
+                            </FormItem>
+                        </Col>
+                        <Col span={6}>
                             <Button size={'large'} type={'primary'} onClick={this.handleSearch}>搜索</Button>{' '}
                             <AddLesson reload={this.fetchData} listTeacher={this.state.listTeacher}/>
                         </Col>
