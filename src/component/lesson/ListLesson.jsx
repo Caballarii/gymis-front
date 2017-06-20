@@ -1,7 +1,10 @@
 import React from 'react';
-import {Table,Pagination,Row,Col,Input,Button,Form} from 'antd';
 import {Link} from 'react-router-dom';
+
+import {Table,Pagination,Row,Col,Input,Button,Form,Select,DatePicker} from 'antd';
 const FormItem = Form.Item;
+const Option = Select.Option;
+const RangePicker = DatePicker.RangePicker;
 
 import {FetchUtil} from '../utils/FetchUtils';
 
@@ -19,6 +22,9 @@ export default class ListLesson extends React.Component{
         totalCount:0,
 
         lessonName:'',
+        teacherId:'',
+        beginTime:moment(),
+        endTime:moment().add(7,"days"),
 
         listTeacher:[]
     }
@@ -71,6 +77,15 @@ export default class ListLesson extends React.Component{
         if(this.state.lessonName){
             url+='&lessonName='+this.state.lessonName;
         }
+        if(this.state.teacherId){
+            url+='&teacherId='+this.state.teacherId;
+        }
+        if(this.state.beginTime){
+            url+='&beginTime='+this.state.beginTime.format('YYYY-MM-DD');
+        }
+        if(this.state.endTime){
+            url+='&endTime='+moment(this.state.endTime).add(1,"days").format('YYYY-MM-DD');
+        }
 
         let data=await FetchUtil(url);
         this.setState({
@@ -106,8 +121,21 @@ export default class ListLesson extends React.Component{
         this.setState(state);
     }
 
+    handleSelect=(name,value)=>{
+        var state = this.state;
+        state[name]=value;
+        this.setState(state);
+    }
+
     handleSearch=()=>{
         this.fetchData();
+    }
+
+    handleCalendar=(dates,dateStrings)=>{
+    	this.setState({
+    		beginTime:dates[0],
+    		endTime:dates[1]
+    	});
     }
 
     render(){
@@ -126,12 +154,27 @@ export default class ListLesson extends React.Component{
             <div>
                 <div>
                     <Row gutter={40}>
-                        <Col span={8}>
+                        <Col span={6}>
                             <FormItem {...formItemLayout} label={'课程名'}>
                                 <Input name="lessonName" value={this.state.lessonName} onChange={this.handleChange}/>
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={6}>
+                            <FormItem {...formItemLayout} label={'老师名'}>
+                                <Select value={this.state.teacherId} onChange={this.handleSelect.bind(this,'teacherId')}>
+                                    <Option value="">请选择老师</Option>
+                                    {this.state.listTeacher.map((info,index)=>{
+                                        return <Option key={index} value={info.id+""}>{info.teacherName}</Option>
+                                    })}
+                                </Select>
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
+                            <FormItem labelCol={{ span: 4}} wrapperCol= {{span: 20}}  label={'起止时间'}>
+                                <RangePicker value={[this.state.beginTime,this.state.endTime]} allowClear format="YYYY/MM/DD" onChange={this.handleCalendar}/>
+                            </FormItem>
+                        </Col>
+                        <Col span={6}>
                             <Button size={'large'} type={'primary'} onClick={this.handleSearch}>搜索</Button>{' '}
                             {/*<AddLesson reload={this.fetchData} listTeacher={this.state.listTeacher}/>*/}
                             <Link to="/addLesson"><Button size={'large'} type={'primary'} onClick={this.handleSearch}>新增</Button></Link>

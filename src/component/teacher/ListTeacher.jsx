@@ -91,12 +91,12 @@ export default class ListTeacher extends React.Component{
             <div>
                 <div>
                     <Row gutter={40}>
-                        <Col span={8}>
+                        <Col span={6}>
                             <FormItem {...formItemLayout} label={'教师名'}>
                                 <Input name="teacherName" value={this.state.teacherName} onChange={this.handleChange}/>
                             </FormItem>
                         </Col>
-                        <Col span={8}>
+                        <Col span={6}>
                             <Button size={'large'} type={'primary'} onClick={this.handleSearch}>搜索</Button>{' '}
                             <AddTeacher reload={this.fetchData}/>
                         </Col>

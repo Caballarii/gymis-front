@@ -25,9 +25,9 @@ module.exports = {
     resolve: {extensions:['.js','.jsx']},
     plugins:[
         new webpack.HotModuleReplacementPlugin(),
-        //new webpack.optimize.UglifyJsPlugin({
+        // new webpack.optimize.UglifyJsPlugin({
 
-        //})
+        // })
     ],
 
     devServer: {
