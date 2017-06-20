@@ -7,6 +7,8 @@ import "babel-polyfill";
 
 import ListTeacher from './teacher/ListTeacher';
 import ListLesson from './lesson/ListLesson';
+import AddLesson from './lesson/AddLesson';
+import WeekLesson from './lesson/WeekLesson';
 
 import 'antd/dist/antd.css';
 
@@ -74,6 +76,8 @@ class RouterList extends React.Component{
                     <Route path="/login" component={Login}/>
                     <Route path="/teacher" component={ListTeacher}/>
                     <Route path="/lesson" component={ListLesson}/>
+                    <Route path="/addLesson" component={AddLesson}/>
+                    <Route path="/weekLesson" component={WeekLesson}/>
                     <Route component={Welcome}/>
                 </Switch>
             </div>

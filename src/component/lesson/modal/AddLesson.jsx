@@ -35,7 +35,7 @@ class AddLesson extends React.Component{
             }
             values.beginTime=moment(values.beginDate).hours(values.beginH).minutes(values.beginM).seconds("00");
             values.endTime=moment(values.beginTime).add('minutes',values.period);
-            let data=await FetchUtil('/lesson','POST',values);
+            let data=await FetchUtil('lesson','POST',values);
             
             if(data.success){
                 Modal.success({

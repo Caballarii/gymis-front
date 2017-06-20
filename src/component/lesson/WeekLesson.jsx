@@ -5,12 +5,9 @@ const FormItem = Form.Item;
 
 import {FetchUtil} from '../utils/FetchUtils';
 
-import AddLesson from './modal/AddLesson';
-import EditLesson from './modal/EditLesson';
-
 import moment from 'moment';
 
-export default class ListLesson extends React.Component{
+export default class WeekLesson extends React.Component{
 
     state={
         tData:[],
@@ -18,65 +15,24 @@ export default class ListLesson extends React.Component{
         pageNum:1,
         totalCount:0,
 
-        lessonName:'',
+        teacherId:'',
+        beginDate:moment().add(-20,'day'),
 
         listTeacher:[]
     }
 
-    columns = [{
-            title: '序号',
-            dataIndex: 'id',
-            render:(t,r,i)=>{
-                return i+1;
-            }
-        }, {
-            title: '课程',
-            dataIndex: 'lessonName',
-        },{
-            title: '教师',
-            dataIndex: 'teacherName',
-        },{
-            title: '开始时间',
-            dataIndex: 'beginTime',
-            render:(t)=>{
-                return moment(t).format("YYYY-MM-DD HH:mm:ss")
-            }
-        },{
-            title: '结束时间',
-            dataIndex: 'endTime',
-            render:(t)=>{
-                return moment(t).format("YYYY-MM-DD HH:mm:ss")
-            }
-        },{
-            title: '时长',
-            dataIndex: 'period',
-        },{
-            title: '教室',
-            dataIndex: 'room',
-        },{
-            title: '备注',
-            dataIndex: 'comment'
-        },{
-            title: '操作',
-            dataIndex: 'operation',
-            render:(t,r,i)=>{
-                return <EditLesson reload={this.fetchData} record={r} listTeacher={this.state.listTeacher}/>;
-            }
-    }];
-
     fetchData=async ()=>{
         let pageSize=10;
         
-        let url='/lesson?pageNum='+this.state.pageNum+'&pageSize='+pageSize;
-        if(this.state.lessonName){
-            url+='&lessonName='+this.state.lessonName;
+        let url='/weekLesson?beginTime='+this.state.beginDate.format("YYYY-MM-DD");
+        if(this.state.teacherId){
+            url+='&teacherId='+this.state.teacherId;
         }
 
         let data=await FetchUtil(url);
+        console.log(data);
         this.setState({
-            tData:data.data.list.list,
-            pageNum:data.data.list.pageNum,
-            totalCount:data.data.list.total
+            tData:data.data.list
         });
     }
 
@@ -84,7 +40,6 @@ export default class ListLesson extends React.Component{
         this.fetchData();
 
         let teacherData=await FetchUtil('/teacher/list');
-        console.log(teacherData);
         this.setState({
             listTeacher:teacherData.data.list
         })
@@ -137,10 +92,6 @@ export default class ListLesson extends React.Component{
                             <Link to="/addLesson"><Button size={'large'} type={'primary'} onClick={this.handleSearch}>新增</Button></Link>
                         </Col>
                     </Row>
-                </div>
-                <Table pagination={false} dataSource={this.state.tData} columns={this.columns} rowKey={'id'}></Table>
-                <div style={{marginTop:30,textAlign:"right"}}>
-                    <Pagination current={this.state.pageNum} total={this.state.totalCount} onChange={this.selectPage}/>
                 </div>
             </div>
         );
