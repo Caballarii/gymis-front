@@ -11,6 +11,7 @@ import AddLesson from './lesson/AddLesson';
 import WeekLesson from './lesson/WeekLesson';
 
 import 'antd/dist/antd.css';
+import './Index.less';
 
 const Home=()=>{
     return (

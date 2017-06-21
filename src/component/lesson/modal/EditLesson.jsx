@@ -74,21 +74,6 @@ class EditLesson extends React.Component{
                     <Form onSubmit={this.handleSubmit}>
                         <FormItem
                         {...formItemLayout}
-                        label="课程名"
-                        >
-                            {getFieldDecorator('lessonName', {
-                                initialValue:this.props.record.lessonName,
-                                rules: [{ type: 'string', required: true, message: '请输入课程名!' },{
-                                    type:'string',
-                                    max:100,
-                                    message:'不能超过100字!'
-                                }],
-                            })(
-                                <Input placeholder="课程名"/>
-                            )}
-                        </FormItem>
-                        <FormItem
-                        {...formItemLayout}
                         label="教师"
                         >
                             {getFieldDecorator('teacherId', {
@@ -128,7 +113,11 @@ class EditLesson extends React.Component{
                                             pattern: /(^[0-1][0-9]$)|(^2[0-3]$)/, message:'请输入小时(24制)'
                                         }], 
                                     })(
-                                        <Input placeholder="时"/>
+                                        <Select>
+                                            {
+                                                
+                                            }
+                                        </Select>
                                     )}
                                 </FormItem>
                             </Col>
@@ -156,6 +145,21 @@ class EditLesson extends React.Component{
                                 rules: [{required: true, message: '请输入持续时间!' }],
                             })(
                                 <InputNumber placeholder="以分钟为单位"/>
+                            )}
+                        </FormItem>
+                        <FormItem
+                        {...formItemLayout}
+                        label="课程名"
+                        >
+                            {getFieldDecorator('lessonName', {
+                                initialValue:this.props.record.lessonName,
+                                rules: [{ type: 'string', required: true, message: '请输入课程名!' },{
+                                    type:'string',
+                                    max:100,
+                                    message:'不能超过100字!'
+                                }],
+                            })(
+                                <Input placeholder="课程名"/>
                             )}
                         </FormItem>
                     </Form>

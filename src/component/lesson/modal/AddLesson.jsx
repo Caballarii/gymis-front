@@ -41,16 +41,17 @@ class AddLesson extends React.Component{
                 Modal.success({
                     title:'新增成功！'
                 });
+                this.setState({
+                    visible:false
+                });
+                this.props.reload();
             }
             else{
                 Modal.error({
                     title:data.msg
                 });
             }
-            this.setState({
-                visible:false
-            });
-            this.props.reload();
+            
         });
     }
 
