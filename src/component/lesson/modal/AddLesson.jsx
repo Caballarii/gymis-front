@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form,Button,Modal,Input,Select,DatePicker,InputNumber,Row,Col} from 'antd';
+import {Form,Button,Modal,Input,Select,DatePicker,InputNumber,Row,Col,Card} from 'antd';
 const FormItem=Form.Item;
 const Option=Select.Option;
 
@@ -11,6 +11,32 @@ class AddLesson extends React.Component{
 
     state={
         visible:false
+    }
+
+    twentyFour=()=>{
+        let arr=[];
+        for(let i=0;i<24;i++){
+            if(i<10){
+                arr.push('0'+i);
+            }
+            else{
+                arr.push(i+'');
+            }
+        }
+        return arr;
+    }
+
+    sixty=()=>{
+        let arr=[];
+        for(let i=0;i<60;i++){
+            if(i<10){
+                arr.push('0'+i);
+            }
+            else{
+                arr.push(i+'');
+            }
+        }
+        return arr;
     }
 
     showMadal=()=>{
@@ -35,8 +61,7 @@ class AddLesson extends React.Component{
             }
             values.beginTime=moment(values.beginDate).hours(values.beginH).minutes(values.beginM).seconds("00");
             values.endTime=moment(values.beginTime).add('minutes',values.period);
-            let data=await FetchUtil('lesson','POST',values);
-            
+            let data=await FetchUtil('/lesson','POST',values);
             if(data.success){
                 Modal.success({
                     title:'新增成功！'
@@ -47,10 +72,25 @@ class AddLesson extends React.Component{
                 this.props.reload();
             }
             else{
+                console.log(data.data.conflictLesson);
+                let conflictLesson=data.data.conflictLesson;
                 Modal.error({
-                    title:data.msg
+                    title:data.msg,
+                    content:
+                        <span>
+                        已有课程：
+                            <Card bodyStyle={{ padding: 10 }}>
+                                
+                                {conflictLesson.teacherName}<br/>
+                                {moment(conflictLesson.beginTime).format("HH:mm")}-{moment(conflictLesson.endTime).format("HH:mm")}<br/>                           
+                                {conflictLesson.comment}<br/>
+                                {conflictLesson.lessonName}<br/>
+                                Room:{conflictLesson.room}<br/>
+                            </Card>
+                        请检查教师、时间、教室并重新输入
+                        </span>
                 });
-            }
+            }           
             
         });
     }
@@ -75,20 +115,6 @@ class AddLesson extends React.Component{
                     <Form onSubmit={this.handleSubmit}>
                         <FormItem
                         {...formItemLayout}
-                        label="课程名"
-                        >
-                            {getFieldDecorator('lessonName', {
-                                rules: [{ type: 'string', required: true, message: '请输入课程名!' },{
-                                    type:'string',
-                                    max:100,
-                                    message:'不能超过100字!'
-                                }],
-                            })(
-                                <Input placeholder="课程名"/>
-                            )}
-                        </FormItem>
-                        <FormItem
-                        {...formItemLayout}
                         label="教师"
                         >
                             {getFieldDecorator('teacherId', {
@@ -104,7 +130,7 @@ class AddLesson extends React.Component{
                         </FormItem>
                         <FormItem
                             {...formItemLayout}
-                            label="起始日期"
+                            label="课程日期"
                             >
                             {getFieldDecorator('beginDate',{
                                 initialValue:moment().add(1,"days"),
@@ -114,33 +140,43 @@ class AddLesson extends React.Component{
                             )}
                         </FormItem>
                         <Row>
-                            <Col span={12}>
+                            <Col span={8}>
                                 <FormItem
-                                    labelCol={{xs: { span: 24 }, sm: { span: 10 }}}
-                                    wrapperCol= {{xs: { span: 24 }, sm: { span: 14 }}}
+                                    labelCol={{xs: { span: 24 }, sm: { span: 15}}}
+                                    wrapperCol= {{xs: { span: 24 }, sm: { span: 9 }}}
                                     label="起始时间"
                                     >
                                     
                                     {getFieldDecorator('beginH',{
-                                        initialValue: '08',
-                                        rules: [{ type: 'string', required: true, message: '请输入小时!' },{
-                                            pattern: /(^[0-1][0-9]$)|(^2[0-3]$)/, message:'请输入小时(24制)'
-                                        }], 
+                                        initialValue:'08',
+                                        rules: [{ type: 'string', required: true, message: '请选择小时!' }], 
                                     })(
-                                        <Input placeholder="时"/>
+                                        <Select>
+                                            {
+                                                this.twentyFour().map(info=>{
+                                                    return <Option value={info} key={info}>{info}</Option>
+                                                })
+                                            }
+                                        </Select>
                                     )}
                                 </FormItem>
                             </Col>
-                            <Col span={11} offset={1}>
+                            <Col span={1}>
+                                <div style={{height:32,lineHeight:"32px"}}>&nbsp;&nbsp;&nbsp;:&nbsp;</div></Col>
+                            <Col span={6}>
                                 <FormItem labelCol={{xs: { span: 0 }, sm: { span: 0 }}}
-                                    wrapperCol= {{xs: { span: 24 }, sm: { span: 14 }}}>
+                                    wrapperCol= {{xs: { span: 24 }, sm: { span: 12 }}}>
                                 {getFieldDecorator('beginM', {
-                                    initialValue: '00',
-                                    rules: [{ type: 'string', required: true, message: '请输入分钟!' },{
-                                            pattern: /(^[0-5][0-9]$)/, message:'请输入分钟'
-                                        }], 
+                                    initialValue:'00',
+                                    rules: [{ type: 'string', required: true, message: '请选择分钟!' }], 
                                 })(
-                                    <Input placeholder="分"/>
+                                    <Select>
+                                        {
+                                            this.sixty().map(info=>{
+                                                return <Option value={info} key={info}>{info}</Option>
+                                            })
+                                        }
+                                    </Select>
                                 )}
                                 </FormItem>
                             </Col>
@@ -157,6 +193,48 @@ class AddLesson extends React.Component{
                                 <InputNumber placeholder="以分钟为单位"/>
                             )}
                         </FormItem>
+                        <FormItem
+                        {...formItemLayout}
+                        label="教室"
+                        >
+                            {getFieldDecorator('room', {
+                                rules: [{ type: 'string', required: true, message: '请输入教室!' },{
+                                    type:'string',
+                                    max:100,
+                                    message:'不能超过100字!'
+                                }],
+                            })(
+                                <Input placeholder="教室"/>
+                            )}
+                        </FormItem>
+                        <FormItem
+                        {...formItemLayout}
+                        label="学生"
+                        >
+                            {getFieldDecorator('comment', {
+                                rules: [{ type: 'string', required: true, message: '请输入上课学生!' },{
+                                    type:'string',
+                                    max:100,
+                                    message:'不能超过100字!'
+                                }],
+                            })(
+                                <Input placeholder="学生"/>
+                            )}
+                        </FormItem>
+                        <FormItem
+                        {...formItemLayout}
+                        label="课程名"
+                        >
+                            {getFieldDecorator('lessonName', {
+                                rules: [{
+                                    type:'string',
+                                    max:100,
+                                    message:'不能超过100字!'
+                                }],
+                            })(
+                                <Input placeholder="课程名"/>
+                            )}
+                        </FormItem>                       
                     </Form>
                 </Modal>
             </span>

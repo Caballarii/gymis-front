@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table,Pagination,Row,Col,Input,Button,Form,Card,Select,DatePicker} from 'antd';
+import {Table,Pagination,Row,Col,Input,Button,Form,Card,Select,DatePicker,Popconfirm,Modal} from 'antd';
 import {Link} from 'react-router-dom';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -35,7 +35,6 @@ export default class WeekLesson extends React.Component{
         }
 
         let data=await FetchUtil(url);
-        console.log(data);
         this.setState({
             tData:data.data.list
         });
@@ -85,7 +84,7 @@ export default class WeekLesson extends React.Component{
 
     selectTeacher=(teacherId)=>{
         this.setState({
-            teacherId:teacherId
+            teacherId:teacherId+""
         },this.handleSearch);
     }
 
@@ -93,6 +92,21 @@ export default class WeekLesson extends React.Component{
         this.setState({
             beginDate:this.state.beginDate.add(number,"weeks")
         },this.handleSearch);
+    }
+
+    deleteLesson=async (lessonId)=>{
+        let data=await FetchUtil('/lesson/'+lessonId,'DELETE');
+        if(data.success){
+            Modal.success({
+                title:'删除成功！'
+            });
+            this.fetchData();
+        }
+        else{
+            Modal.error({
+                title:data.msg
+            });
+        }  
     }
 
     render(){
@@ -117,8 +131,13 @@ export default class WeekLesson extends React.Component{
                         </Col>
                         <Col span={6}>
                             <FormItem {...formItemLayout} label={'老师名'}>
-                                <Select value={this.state.teacherId} onChange={this.handleSelect.bind(this,'teacherId')}>
-                                    <Option value="">请选择老师</Option>
+                                <Select showSearch
+                                    style={{ minWidth: 100 }}
+                                    value={this.state.teacherId}
+                                    onChange={this.handleSelect.bind(this,'teacherId')}
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                    <Option value="">全体老师</Option>
                                     {this.state.listTeacher.map((info,index)=>{
                                         return <Option key={index} value={info.id+""}>{info.teacherName}</Option>
                                     })}
@@ -126,7 +145,7 @@ export default class WeekLesson extends React.Component{
                             </FormItem>
                         </Col>
                         <Col span={6}>
-                            <Button size={'large'} type={'primary'} onClick={this.handleSearch}>搜索</Button>{' '}
+                            {/*<Button size={'large'} type={'primary'} onClick={this.handleSearch}>搜索</Button>{' '}*/}
                             <AddLesson reload={this.fetchData} listTeacher={this.state.listTeacher}/>
                         </Col>
                     </Row>
@@ -140,7 +159,6 @@ export default class WeekLesson extends React.Component{
                                     <h3 className="text-center">{moment(this.state.beginDate).add(index,"days").format("ddd MM-DD")}</h3>
                                     {
                                         info.map((info1)=>{
-                                            console.log(info1);
                                             return(
                                                 <Card key={info1.id} bodyStyle={{ padding: 10 }}>
                                                     <a onClick={this.selectTeacher.bind(this,info1.teacherId)}>{info1.teacherName}</a><br/>
@@ -148,7 +166,11 @@ export default class WeekLesson extends React.Component{
                                                     {info1.comment}<br/>
                                                     {info1.lessonName}<br/>
                                                     Room:{info1.room}<br/>
-                                                    <EditLesson reload={this.fetchData} record={info1} listTeacher={this.state.listTeacher}/>
+                                                    <EditLesson reload={this.fetchData} record={info1} listTeacher={this.state.listTeacher}/>{' '}
+                                                    
+                                                    <Popconfirm placement="bottomLeft" title={"确认删除课程嘛？"} onConfirm={this.deleteLesson.bind(this,info1.id)} okText="Yes" cancelText="No">
+                                                        <a>删除</a>
+                                                    </Popconfirm>
                                                 </Card>
                                             );
                                         })

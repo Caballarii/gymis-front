@@ -62,7 +62,7 @@ class RouterList extends React.Component{
                 style={{ lineHeight: '64px' }}
                 onSelect={this.onSelect}
             >
-                <Menu.Item key="lesson"><Link to="/lesson">课程管理</Link></Menu.Item>
+                <Menu.Item key="lesson"><Link to="/weekLesson">课程管理</Link></Menu.Item>
                 <Menu.Item key="teacher"><Link to="/teacher">教师管理</Link></Menu.Item>
             </Menu>
             </Header>
@@ -71,7 +71,7 @@ class RouterList extends React.Component{
                 {/*<Breadcrumb.Item>Home</Breadcrumb.Item>
                 <Breadcrumb.Item>Lesson</Breadcrumb.Item>*/}
             </Breadcrumb>
-            <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+            <div style={{ background: '#fff', padding: 24, minHeight: 580 }}>
                 <Switch>
                     <Route exact path="/" component={Home}/>
                     <Route path="/login" component={Login}/>
