@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table,Pagination,Row,Col,Input,Button,Form,Card,Select,DatePicker,Popconfirm,Modal} from 'antd';
+import {Table,Pagination,Row,Col,Input,Button,Form,Card,Select,DatePicker,Popconfirm,Modal,Spin} from 'antd';
 import {Link} from 'react-router-dom';
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -23,10 +23,15 @@ export default class WeekLesson extends React.Component{
         teacherId:'',
         beginDate:moment().day(1),
 
-        listTeacher:[]
+        listTeacher:[],
+
+        loading:true
     }
 
     fetchData=async ()=>{
+        this.setState({
+            loading:true
+        });
         let pageSize=10;
         
         let url='/weekLesson?beginTime='+this.state.beginDate.format("YYYY-MM-DD");
@@ -36,7 +41,8 @@ export default class WeekLesson extends React.Component{
 
         let data=await FetchUtil(url);
         this.setState({
-            tData:data.data.list
+            tData:data.data.list,
+            loading:false
         });
     }
 
@@ -151,6 +157,7 @@ export default class WeekLesson extends React.Component{
                     </Row>
                 </div>
 
+                <Spin spinning={this.state.loading}>
                 <Row gutter={10}>
                     {
                         this.state.tData.map((info,index)=>{
@@ -182,6 +189,7 @@ export default class WeekLesson extends React.Component{
                     }
                     
                 </Row>
+                </Spin>
             </div>
         );
     }

@@ -15,7 +15,9 @@ export default class ListTeacher extends React.Component{
         pageNum:1,
         totalCount:0,
 
-        teacherName:''
+        teacherName:'',
+
+        loading:true
     }
 
     columns = [{
@@ -37,7 +39,9 @@ export default class ListTeacher extends React.Component{
 
     fetchData=async ()=>{
         let pageSize=10;
-        
+        this.setState({
+            loading:true
+        });
         let url='/teacher?pageNum='+this.state.pageNum+'&pageSize='+pageSize;
         if(this.state.teacherName){
             url+='&teacherName='+this.state.teacherName;
@@ -47,7 +51,9 @@ export default class ListTeacher extends React.Component{
         this.setState({
             tData:data.data.list.list,
             pageNum:data.data.list.pageNum,
-            totalCount:data.data.list.total
+            totalCount:data.data.list.total,
+
+            loading:false
         });
     }
 
@@ -102,7 +108,7 @@ export default class ListTeacher extends React.Component{
                         </Col>
                     </Row>
                 </div>
-                <Table pagination={false} dataSource={this.state.tData} columns={this.columns} rowKey={'id'}></Table>
+                <Table loading={this.state.loading} pagination={false} dataSource={this.state.tData} columns={this.columns} rowKey={'id'}></Table>
                 <div style={{marginTop:30,textAlign:"right"}}>
                     <Pagination current={this.state.pageNum} total={this.state.totalCount} onChange={this.selectPage}/>
                 </div>
